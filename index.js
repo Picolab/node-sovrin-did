@@ -1,9 +1,7 @@
 var nacl = require("tweetnacl");
 var bs58 = require("bs58");
 
-var fromSeed = function(seed_hex){
-
-    var seed = Buffer.from(seed_hex, "hex");
+var fromSeed = function(seed){
 
     var x = nacl.sign.keyPair.fromSeed(seed);
 
