@@ -55,3 +55,17 @@ test("sovrinDID.fromSeed(seed)", function(t){
 
     t.end();
 });
+
+test("sovrinDID.gen()", function(t){
+
+    var g1 = sovrinDID.gen();
+    var seed = Buffer.from(g1.secret.seed, "hex");
+
+    t.deepEquals(sovrinDID.fromSeed(seed), g1, "gen should just wrap .fromSeed(seed)");
+
+    t.notEquals(g1.secret.seed, sovrinDID.gen().secret.seed);
+    t.notEquals(g1.secret.seed, sovrinDID.gen().secret.seed);
+    t.notEquals(g1.secret.seed, sovrinDID.gen().secret.seed);
+
+    t.end();
+});

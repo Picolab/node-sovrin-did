@@ -19,7 +19,10 @@ var fromSeed = function(seed_hex){
     };
 };
 
-//var seed = nacl.randomBytes(nacl.sign.seedLength);
 module.exports = {
+    gen: function(){
+        var seed = nacl.randomBytes(nacl.sign.seedLength);
+        return fromSeed(seed);
+    },
     fromSeed: fromSeed,
 };
