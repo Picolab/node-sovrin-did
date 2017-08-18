@@ -8,13 +8,14 @@ var fromSeed = function(seed_hex){
     var x = nacl.sign.keyPair.fromSeed(seed);
 
     return {
+
         did: bs58.encode(x.publicKey.subarray(0, 16)),
+        verifyKey: bs58.encode(x.publicKey),
 
-        key_verify: bs58.encode(x.publicKey),
-
-        key_sign: bs58.encode(x.secretKey.subarray(0, 32)),
-
-        seed: Buffer.from(seed).toString("hex"),
+        secret: {
+            seed: Buffer.from(seed).toString("hex"),
+            signKey: bs58.encode(x.secretKey.subarray(0, 32)),
+        },
     };
 };
 
