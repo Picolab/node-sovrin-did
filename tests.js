@@ -96,7 +96,7 @@ test("sovrinDID.verifySignedMessage(signedMessage, publicKey)", function (t) {
     t.equal(sovrinDID.verifySignedMessage(signedMessage, publicKey), true);
     t.equal(sovrinDID.verifySignedMessage(signedMessage, publicKey2), false);
 
-    t.equal(sovrinDID.verifySignedMessage(signedMessage2, publicKey2,), true);
+    t.equal(sovrinDID.verifySignedMessage(signedMessage2, publicKey2), true);
     t.equal(sovrinDID.verifySignedMessage(signedMessage2, publicKey), false);
 
     t.end();
