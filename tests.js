@@ -69,3 +69,35 @@ test("sovrinDID.gen()", function(t){
 
     t.end();
 });
+
+test("sovrinDID.signMessage(message, privateKey, publicKey)", function (t) {
+
+    var privateKey = "4bMnc36WuLYJqsWTZtiazJJrtkvPwgyWnirn7gKk7ium";
+    var publicKey = "BzH5a2wLEyKxySUALpfBiBjHZtZudCG68J17QwWkRsdN";
+    var message = "Hello World!!";
+
+    var signedMessage = sovrinDID.signMessage(message, privateKey, publicKey);
+    t.notEqual(message, signedMessage);
+    t.end();
+});
+
+test("sovrinDID.verifySignedMessage(signedMessage, publicKey)", function (t) {
+
+    var privateKey = "4bMnc36WuLYJqsWTZtiazJJrtkvPwgyWnirn7gKk7ium";
+    var publicKey = "BzH5a2wLEyKxySUALpfBiBjHZtZudCG68J17QwWkRsdN";
+    var publicKey2 = "QDQ7Y69yg6eeJNstq62rXw8mK8HmnnsocPwvo9DU2tS";
+    var privateKey2 = "516mChDX1BRjwHJc2w838W8cXxy8a6Eb35HKXjPR2fD8";
+    var message = "Hello World!!";
+    var message2 = "I want to take over the world!!";
+
+    var signedMessage = sovrinDID.signMessage(message, privateKey, publicKey);
+    var signedMessage2 = sovrinDID.signMessage(message2, privateKey2, publicKey2);
+
+    t.equal(sovrinDID.verifySignedMessage(signedMessage, publicKey), true);
+    t.equal(sovrinDID.verifySignedMessage(signedMessage, publicKey2), false);
+
+    t.equal(sovrinDID.verifySignedMessage(signedMessage2, publicKey2,), true);
+    t.equal(sovrinDID.verifySignedMessage(signedMessage2, publicKey), false);
+
+    t.end();
+});
