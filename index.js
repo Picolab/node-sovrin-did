@@ -17,16 +17,16 @@ var fromSeed = function(seed){
     };
 };
 
-var verifySignedMessage = function(signedMessage, publicKey) {
-    var decodedKey = bs58.decode(publicKey);
+var verifySignedMessage = function(signedMessage, verifyKey) {
+    var decodedKey = bs58.decode(verifyKey);
     var signed = nacl.sign.open(signedMessage, decodedKey);
     return signed !== null;
 };
 
-var signMessage = function(message, privateKey, publicKey) {
-    publicKey = bs58.decode(publicKey);
-    privateKey = bs58.decode(privateKey);
-    var signKey = Buffer.concat([privateKey, publicKey]);
+var signMessage = function(message, signKey, verifyKey) {
+    verifyKey = bs58.decode(verifyKey);
+    signKey = bs58.decode(signKey);
+    var signKey = Buffer.concat([signKey, verifyKey]);
     var arrayMessage = Uint8Array.from(message);
     return nacl.sign(arrayMessage, signKey);
 };
