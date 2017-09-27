@@ -17,10 +17,26 @@ var fromSeed = function(seed){
     };
 };
 
+var verifySignedMessage = function(signedMessage, verifyKey) {
+    var decodedKey = bs58.decode(verifyKey);
+    var signed = nacl.sign.open(signedMessage, decodedKey);
+    return signed !== null;
+};
+
+var signMessage = function(message, signKey, verifyKey) {
+    verifyKey = bs58.decode(verifyKey);
+    signKey = bs58.decode(signKey);
+    var fullSignKey = Buffer.concat([signKey, verifyKey]);
+    var arrayMessage = Uint8Array.from(message);
+    return nacl.sign(arrayMessage, fullSignKey);
+};
+
 module.exports = {
     gen: function(){
         var seed = nacl.randomBytes(nacl.sign.seedLength);
         return fromSeed(seed);
     },
     fromSeed: fromSeed,
+    signMessage: signMessage,
+    verifySignedMessage: verifySignedMessage,
 };
