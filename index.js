@@ -26,9 +26,9 @@ var verifySignedMessage = function(signedMessage, verifyKey) {
 var signMessage = function(message, signKey, verifyKey) {
     verifyKey = bs58.decode(verifyKey);
     signKey = bs58.decode(signKey);
-    var signKey = Buffer.concat([signKey, verifyKey]);
+    var fullSignKey = Buffer.concat([signKey, verifyKey]);
     var arrayMessage = Uint8Array.from(message);
-    return nacl.sign(arrayMessage, signKey);
+    return nacl.sign(arrayMessage, fullSignKey);
 };
 
 module.exports = {
