@@ -31,6 +31,32 @@ var signMessage = function(message, signKey, verifyKey) {
     return nacl.sign(arrayMessage, fullSignKey);
 };
 
+function getArrayFromKey(key) {
+    return Uint8Array.from(bs58.decode(key));
+}
+
+var getNonce = function () {
+    return nacl.randomBytes(nacl.box.nonceLength);
+};
+
+var getBoxKeyPairFromSignKey = function (signKey) {
+    return nacl.box.keyPair.fromSecretKey(getArrayFromKey(signKey));
+};
+
+var getSharedSecret = function (theirVerifyKey, mySigningKey) {
+    return nacl.box.before(theirVerifyKey, mySigningKey)
+};
+
+var decryptMessage = function (encryptedMessage, nonce, sharedSecret) {
+    var verifiedEncrypTion = nacl.box.open.after(encryptedMessage, nonce, sharedSecret);
+    return verifiedEncrypTion !== null ? new textEncoding.TextDecoder().decode(verifiedEncrypTion) : false;
+};
+
+var encryptMessage =  function (message, nonce, sharedSecret) {
+    message = new textEncoding.TextEncoder().encode(message);
+    return nacl.box.after(message, nonce, sharedSecret);
+};
+
 module.exports = {
     gen: function(){
         var seed = nacl.randomBytes(nacl.sign.seedLength);
@@ -39,4 +65,9 @@ module.exports = {
     fromSeed: fromSeed,
     signMessage: signMessage,
     verifySignedMessage: verifySignedMessage,
+    getBoxKeyPairFromSignKey: getBoxKeyPairFromSignKey,
+    getSharedSecret: getSharedSecret,
+    decryptMessage: decryptMessage,
+    encryptMessage: encryptMessage,
+    getNonce: getNonce,
 };

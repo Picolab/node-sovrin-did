@@ -1,4 +1,5 @@
 var test = require("tape");
+var nacl = require("tweetnacl");
 var sovrinDID = require("./");
 
 test("sovrinDID.fromSeed(seed)", function(t){
@@ -70,7 +71,7 @@ test("sovrinDID.gen()", function(t){
     t.end();
 });
 
-test("sovrinDID.signMessage(message, signKey, verifyKey)", function (t) {
+test("sovrinDID.signMessage(message, signKey, verifyKey)", function(t) {
 
     var signKey = "4bMnc36WuLYJqsWTZtiazJJrtkvPwgyWnirn7gKk7ium";
     var verifyKey = "BzH5a2wLEyKxySUALpfBiBjHZtZudCG68J17QwWkRsdN";
@@ -81,7 +82,7 @@ test("sovrinDID.signMessage(message, signKey, verifyKey)", function (t) {
     t.end();
 });
 
-test("sovrinDID.verifySignedMessage(signedMessage, verifyKey)", function (t) {
+test("sovrinDID.verifySignedMessage(signedMessage, verifyKey)", function(t) {
 
     var signKey = "4bMnc36WuLYJqsWTZtiazJJrtkvPwgyWnirn7gKk7ium";
     var verifyKey = "BzH5a2wLEyKxySUALpfBiBjHZtZudCG68J17QwWkRsdN";
@@ -98,6 +99,80 @@ test("sovrinDID.verifySignedMessage(signedMessage, verifyKey)", function (t) {
 
     t.equal(sovrinDID.verifySignedMessage(signedMessage2, verifyKey2), message2);
     t.equal(sovrinDID.verifySignedMessage(signedMessage2, verifyKey), false);
+
+    t.end();
+});
+
+test("sovrinDID.getBoxKeyPairFromSignKey(signKey)", function(t) {
+    var signKey = "4bMnc36WuLYJqsWTZtiazJJrtkvPwgyWnirn7gKk7ium";
+    var keyPair = sovrinDID.getBoxKeyPairFromSignKey(signKey);
+
+    t.equal(keyPair.publicKey.length, 32);
+    t.equal(keyPair.secretKey.length, 32);
+
+    t.end();
+});
+
+test("sovrinDID.getSharedSecret(theirVerifyKey, mySigningKey", function(t) {
+    var signKey1 = "4bMnc36WuLYJqsWTZtiazJJrtkvPwgyWnirn7gKk7ium";
+    var signKey2 = "516mChDX1BRjwHJc2w838W8cXxy8a6Eb35HKXjPR2fD8";
+    var signKey3 = "7H25Jfb2ND51hhaomL5FPhhqQvBGujd1jJeSjZZ8HQzR";
+
+    var keyPair1 = sovrinDID.getBoxKeyPairFromSignKey(signKey1);
+    var keyPair2 = sovrinDID.getBoxKeyPairFromSignKey(signKey2);
+    var keyPair3 = sovrinDID.getBoxKeyPairFromSignKey(signKey3);
+
+    var sharedSecret1To2 = sovrinDID.getSharedSecret(keyPair2.publicKey, keyPair1.secretKey);
+    var sharedSecret2To1 = sovrinDID.getSharedSecret(keyPair1.publicKey, keyPair2.secretKey);
+    var sharedSecret3To1 = sovrinDID.getSharedSecret(keyPair3.publicKey, keyPair1.secretKey);
+
+    t.equal(nacl.verify(sharedSecret1To2, sharedSecret2To1), true);
+    t.equal(nacl.verify(sharedSecret3To1, sharedSecret2To1), false);
+
+    t.end();
+});
+
+test("sovrinDID.encryptMessage(message, nonce, sharedSecret)", function (t) {
+    var signKey1 = "4bMnc36WuLYJqsWTZtiazJJrtkvPwgyWnirn7gKk7ium";
+    var signKey2 = "516mChDX1BRjwHJc2w838W8cXxy8a6Eb35HKXjPR2fD8";
+
+    var keyPair1 = sovrinDID.getBoxKeyPairFromSignKey(signKey1);
+    var keyPair2 = sovrinDID.getBoxKeyPairFromSignKey(signKey2);
+
+    var sharedSecret1To2 = sovrinDID.getSharedSecret(keyPair2.publicKey, keyPair1.secretKey);
+
+    var message = "Hello World!!";
+    var nonce = sovrinDID.getNonce();
+    var encryptedMessage = sovrinDID.encryptMessage(message, nonce, sharedSecret1To2);
+
+    t.notEqual(message, encryptedMessage);
+
+    t.end();
+});
+
+test("sovrinDID.decryptMessage(theirVerifyKey, mySigningKey", function(t) {
+    var signKey1 = "4bMnc36WuLYJqsWTZtiazJJrtkvPwgyWnirn7gKk7ium";
+    var signKey2 = "516mChDX1BRjwHJc2w838W8cXxy8a6Eb35HKXjPR2fD8";
+    var signKey3 = "7H25Jfb2ND51hhaomL5FPhhqQvBGujd1jJeSjZZ8HQzR";
+
+    var keyPair1 = sovrinDID.getBoxKeyPairFromSignKey(signKey1);
+    var keyPair2 = sovrinDID.getBoxKeyPairFromSignKey(signKey2);
+    var keyPair3 = sovrinDID.getBoxKeyPairFromSignKey(signKey3);
+
+    var sharedSecret1To2 = sovrinDID.getSharedSecret(keyPair2.publicKey, keyPair1.secretKey);
+    var sharedSecret2To1 = sovrinDID.getSharedSecret(keyPair1.publicKey, keyPair2.secretKey);
+    var sharedSecret3To1 = sovrinDID.getSharedSecret(keyPair3.publicKey, keyPair1.secretKey);
+
+    var message = "Hello World!!";
+    var nonce = sovrinDID.getNonce();
+
+    var encryptedMessage = sovrinDID.encryptMessage(message, nonce, sharedSecret1To2);
+    var decryptedMessage = sovrinDID.decryptMessage(encryptedMessage, nonce, sharedSecret2To1);
+    var attemptedDecryption = sovrinDID.decryptMessage(encryptedMessage, nonce, sharedSecret3To1);
+
+    t.equal(decryptedMessage, message);
+    t.notEqual(message, attemptedDecryption);
+    t.equal(attemptedDecryption, false);
 
     t.end();
 });
