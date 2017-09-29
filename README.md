@@ -216,7 +216,7 @@ console.log(attemptedDecryption);
 ```
 
 Output:
-```js
+```
 Hello World!!
 false
 ```
