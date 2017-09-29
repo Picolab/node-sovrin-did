@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "bs58": "^4.0.1",
+    "text-encoding": "^0.6.4",
     "tweetnacl": "^1.0.0"
   }
 }

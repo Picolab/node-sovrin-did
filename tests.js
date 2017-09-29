@@ -93,10 +93,10 @@ test("sovrinDID.verifySignedMessage(signedMessage, verifyKey)", function (t) {
     var signedMessage = sovrinDID.signMessage(message, signKey, verifyKey);
     var signedMessage2 = sovrinDID.signMessage(message2, signKey2, verifyKey2);
 
-    t.equal(sovrinDID.verifySignedMessage(signedMessage, verifyKey), true);
+    t.equal(sovrinDID.verifySignedMessage(signedMessage, verifyKey), message);
     t.equal(sovrinDID.verifySignedMessage(signedMessage, verifyKey2), false);
 
-    t.equal(sovrinDID.verifySignedMessage(signedMessage2, verifyKey2), true);
+    t.equal(sovrinDID.verifySignedMessage(signedMessage2, verifyKey2), message2);
     t.equal(sovrinDID.verifySignedMessage(signedMessage2, verifyKey), false);
 
     t.end();

@@ -85,7 +85,7 @@ Verifies that the given message  has been signed by the possessor of the given v
 * The signedMessage should be what is returned from the `signMessage(message, signKey, verifyKey)` method
 * The verifyKey should be the verifyKey given from the `gen()` or `fromSeed(seed)` methods
 
-Returns `true` if the message was signed by the owner of the verifyKey `false` otherwise.
+Returns the original message if the message was signed by the owner of the verifyKey `false` otherwise.
 
 Example:
 ```js
@@ -106,7 +106,7 @@ Example:
 
 Output:
 ```
-  true
+  Hello World!!
   false
 ```
 ## License

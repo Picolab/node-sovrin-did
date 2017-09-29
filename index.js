@@ -1,6 +1,6 @@
 var nacl = require("tweetnacl");
 var bs58 = require("bs58");
-
+var textEncoding = require("text-encoding");
 var fromSeed = function(seed){
 
     var x = nacl.sign.keyPair.fromSeed(seed);
@@ -20,14 +20,14 @@ var fromSeed = function(seed){
 var verifySignedMessage = function(signedMessage, verifyKey) {
     var decodedKey = bs58.decode(verifyKey);
     var signed = nacl.sign.open(signedMessage, decodedKey);
-    return signed !== null;
+    return signed !== null ? new textEncoding.TextDecoder().decode(signed) : false;
 };
 
 var signMessage = function(message, signKey, verifyKey) {
     verifyKey = bs58.decode(verifyKey);
     signKey = bs58.decode(signKey);
     var fullSignKey = Buffer.concat([signKey, verifyKey]);
-    var arrayMessage = Uint8Array.from(message);
+    var arrayMessage = new textEncoding.TextEncoder().encode(message);
     return nacl.sign(arrayMessage, fullSignKey);
 };
 
