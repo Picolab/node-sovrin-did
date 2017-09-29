@@ -103,9 +103,9 @@ test("sovrinDID.verifySignedMessage(signedMessage, verifyKey)", function(t) {
     t.end();
 });
 
-test("sovrinDID.getBoxKeyPairFromSignKey(signKey)", function(t) {
+test("sovrinDID.getKeyPairFromSignKey(signKey)", function(t) {
     var signKey = "4bMnc36WuLYJqsWTZtiazJJrtkvPwgyWnirn7gKk7ium";
-    var keyPair = sovrinDID.getBoxKeyPairFromSignKey(signKey);
+    var keyPair = sovrinDID.getKeyPairFromSignKey(signKey);
 
     t.equal(keyPair.publicKey.length, 32);
     t.equal(keyPair.secretKey.length, 32);
@@ -118,9 +118,9 @@ test("sovrinDID.getSharedSecret(theirVerifyKey, mySigningKey", function(t) {
     var signKey2 = "516mChDX1BRjwHJc2w838W8cXxy8a6Eb35HKXjPR2fD8";
     var signKey3 = "7H25Jfb2ND51hhaomL5FPhhqQvBGujd1jJeSjZZ8HQzR";
 
-    var keyPair1 = sovrinDID.getBoxKeyPairFromSignKey(signKey1);
-    var keyPair2 = sovrinDID.getBoxKeyPairFromSignKey(signKey2);
-    var keyPair3 = sovrinDID.getBoxKeyPairFromSignKey(signKey3);
+    var keyPair1 = sovrinDID.getKeyPairFromSignKey(signKey1);
+    var keyPair2 = sovrinDID.getKeyPairFromSignKey(signKey2);
+    var keyPair3 = sovrinDID.getKeyPairFromSignKey(signKey3);
 
     var sharedSecret1To2 = sovrinDID.getSharedSecret(keyPair2.publicKey, keyPair1.secretKey);
     var sharedSecret2To1 = sovrinDID.getSharedSecret(keyPair1.publicKey, keyPair2.secretKey);
@@ -136,8 +136,8 @@ test("sovrinDID.encryptMessage(message, nonce, sharedSecret)", function (t) {
     var signKey1 = "4bMnc36WuLYJqsWTZtiazJJrtkvPwgyWnirn7gKk7ium";
     var signKey2 = "516mChDX1BRjwHJc2w838W8cXxy8a6Eb35HKXjPR2fD8";
 
-    var keyPair1 = sovrinDID.getBoxKeyPairFromSignKey(signKey1);
-    var keyPair2 = sovrinDID.getBoxKeyPairFromSignKey(signKey2);
+    var keyPair1 = sovrinDID.getKeyPairFromSignKey(signKey1);
+    var keyPair2 = sovrinDID.getKeyPairFromSignKey(signKey2);
 
     var sharedSecret1To2 = sovrinDID.getSharedSecret(keyPair2.publicKey, keyPair1.secretKey);
 
@@ -155,9 +155,9 @@ test("sovrinDID.decryptMessage(theirVerifyKey, mySigningKey", function(t) {
     var signKey2 = "516mChDX1BRjwHJc2w838W8cXxy8a6Eb35HKXjPR2fD8";
     var signKey3 = "7H25Jfb2ND51hhaomL5FPhhqQvBGujd1jJeSjZZ8HQzR";
 
-    var keyPair1 = sovrinDID.getBoxKeyPairFromSignKey(signKey1);
-    var keyPair2 = sovrinDID.getBoxKeyPairFromSignKey(signKey2);
-    var keyPair3 = sovrinDID.getBoxKeyPairFromSignKey(signKey3);
+    var keyPair1 = sovrinDID.getKeyPairFromSignKey(signKey1);
+    var keyPair2 = sovrinDID.getKeyPairFromSignKey(signKey2);
+    var keyPair3 = sovrinDID.getKeyPairFromSignKey(signKey3);
 
     var sharedSecret1To2 = sovrinDID.getSharedSecret(keyPair2.publicKey, keyPair1.secretKey);
     var sharedSecret2To1 = sovrinDID.getSharedSecret(keyPair1.publicKey, keyPair2.secretKey);

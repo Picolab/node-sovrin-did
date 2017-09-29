@@ -65,7 +65,7 @@ module.exports = {
     fromSeed: fromSeed,
     signMessage: signMessage,
     verifySignedMessage: verifySignedMessage,
-    getBoxKeyPairFromSignKey: getBoxKeyPairFromSignKey,
+    getKeyPairFromSignKey: getBoxKeyPairFromSignKey,
     getSharedSecret: getSharedSecret,
     decryptMessage: decryptMessage,
     encryptMessage: encryptMessage,

@@ -76,7 +76,7 @@ Example:
   var verifyKey = sovrin.verifyKey;
   var message = "Hello World!!";
  
-  var signedMessage = sovrinDID.signMessage(message, signKey, verifyKey);;
+  var signedMessage = sovrinDID.signMessage(message, signKey, verifyKey);
 
 ```
 ### sovrinDID.verifySignedMessage(signedMessage, verifyKey)
@@ -101,13 +101,124 @@ Example:
   var signedMessage = sovrinDID.signMessage(message, signKey, verifyKey);
  
   console.log(sovrinDID.verifySignedMessage(signedMessage, verifyKey));
-  console.log(sovrinDID.verifySignedMessage(signedMessage, verifyKey2))
+  console.log(sovrinDID.verifySignedMessage(signedMessage, verifyKey2));
 ```
 
 Output:
 ```
   Hello World!!
   false
+```
+
+### getKeyPairFromSignKey(signKey)
+Returns a key pair that is valid to use for encrypting. 
+* The signKey should be the signKey given from the object given from `gen()` or `fromSeed()`
+
+Example:
+```js
+var sovrin = sovrinDID.gen();
+var signKey = sovrin.secret.signKey;
+
+var keyPair = sovrinDID.getKeyPairFromSignKey(signKey);
+console.log(keyPair);
+```
+
+Output:
+```js
+{
+   publicKey: ...   // Uint8Array with 32-byte public key
+   secretKey: ...   // Uint8Array with 32-byte secret key
+}
+```
+
+### getNonce()
+Returns a random nonce as a Uint8Array that can be used for encrypting.
+
+Example:
+```js
+var nonce = sovrinDID.getNonce();
+```
+### getSharedSecret(theirVerifyKey, mySigningKey)
+Computes a sharedSecret to be used for encryption.
+
+* theirVerifyKey should be the publicKey given from the `getKeyPairFromSignKey(signKey)` method
+* mySigningKey should be the secretKey given from the `getKeyPairFromSignKey(signKey)` method
+
+Example:
+```js
+var sovrin1 = sovrinDID.gen();
+var sovrin2 = sovrinDID.gen();
+var signKey1 = sovrin1.secret.signKey;
+var signKey2 = sovrin2.secret.signKey;
+
+var keyPair1 = sovrinDID.getKeyPairFromSignKey(signKey1);
+var keyPair2 = sovrinDID.getKeyPairFromSignKey(signKey2);
+
+// These two secrets are the same
+var sharedSecret1To2 = sovrinDID.getSharedSecret(keyPair2.publicKey, keyPair1.secretKey);
+var sharedSecret2To1 = sovrinDID.getSharedSecret(keyPair1.publicKey, keyPair2.secretKey);
+```
+
+### encryptMessage(message, nonce, sharedSecret)
+Encrypts a the given message using a precomputed sharedSecret.
+* message should be given as a string
+* nonce should be a nonce from the `getNonce()` method 
+    * Note: The nonce used for encrypting and decrypting need to be the same
+* sharedSecret should be computed using the `getSharedSecret(theirVerifyKey, mySigningKey)` method
+
+Example:
+
+```js
+var sovrin1 = sovrinDID.gen();
+var sovrin2 = sovrinDID.gen();
+
+var signKey1 = sovrin1.secret.signKey;
+var signKey2 = sovrin2.secret.signKey;
+
+var keyPair1 = sovrinDID.getKeyPairFromSignKey(signKey1);
+var keyPair2 = sovrinDID.getKeyPairFromSignKey(signKey2);
+var sharedSecret1To2 = sovrinDID.getSharedSecret(keyPair2.publicKey, keyPair1.secretKey);
+
+var message = "Hello World!!";
+var nonce = sovrinDID.getNonce();
+var encryptedMessage = sovrinDID.encryptMessage(message, nonce, sharedSecret1To2);
+```
+### decryptMessage(encryptedMessage, nonce, sharedSecret)
+Verifies and decrypts a previously encrypted message.
+* encryptedMessage should be what is returned from the `encryptMessage(message, nonce, sharedSecret)` method
+* nonce should be a nonce given from the `getNonce()` method
+    * Note: The nonce used for encrypting and decrypting need to be the same
+* sharedSecret should be computed using the `getSharedSecret(theirVerifyKey, mySigningKey)` method
+
+Example:
+```js
+var signKey1 = "4bMnc36WuLYJqsWTZtiazJJrtkvPwgyWnirn7gKk7ium";
+var signKey2 = "516mChDX1BRjwHJc2w838W8cXxy8a6Eb35HKXjPR2fD8";
+var signKey3 = "7H25Jfb2ND51hhaomL5FPhhqQvBGujd1jJeSjZZ8HQzR";
+
+var keyPair1 = sovrinDID.getKeyPairFromSignKey(signKey1);
+var keyPair2 = sovrinDID.getKeyPairFromSignKey(signKey2);
+var keyPair3 = sovrinDID.getKeyPairFromSignKey(signKey3);
+
+var sharedSecret1To2 = sovrinDID.getSharedSecret(keyPair2.publicKey, keyPair1.secretKey);
+var sharedSecret2To1 = sovrinDID.getSharedSecret(keyPair1.publicKey, keyPair2.secretKey);
+var sharedSecret3To1 = sovrinDID.getSharedSecret(keyPair3.publicKey, keyPair1.secretKey);
+
+var message = "Hello World!!";
+var nonce = sovrinDID.getNonce();
+
+var encryptedMessage = sovrinDID.encryptMessage(message, nonce, sharedSecret1To2);
+var decryptedMessage = sovrinDID.decryptMessage(encryptedMessage, nonce, sharedSecret2To1);
+var attemptedDecryption = sovrinDID.decryptMessage(encryptedMessage, nonce, sharedSecret3To1);
+
+console.log(decryptedMessage);
+console.log(attemptedDecryption);
+```
+
+Output:
+```js
+Hello World!!
+false
 ```
 ## License
 MIT
