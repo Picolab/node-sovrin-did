@@ -4,11 +4,13 @@
 
 node.js module to generate DID and Ed25519 keys to use with [Sovrin](https://sovrin.org/)
 
+
 ## Install
 
 ```sh
 $ npm i sovrin-did
 ```
+
 
 ## Example
 
@@ -28,8 +30,11 @@ output:
      signKey: '4gKLe7Qq2WX249NBfymQySZbAzXboq2emMig6wBR82Bj' } }
 ```
 
+
 ## API
-### sovrinDID.gen()
+
+
+### gen()
 
 Generates a new did, verification key, signing key, and also gives you the seed used to generate them.
 
@@ -45,7 +50,8 @@ Generates a new did, verification key, signing key, and also gives you the seed 
 }
 ```
 
-### sovrinDID.fromSeed(seed)
+
+### fromSeed(seed)
 
 Same as `.gen()` except you supply the seed. The seed should be a 32-byte Uint8Array (i.e. Buffer).
 
@@ -60,7 +66,9 @@ console.log(d);
 
 The output is the same as the `.gen()` example.
 
-### sovrinDID.signMessage(message, signKey, verifyKey)
+
+### signMessage(message, signKey, verifyKey)
+
 Signs a message with the given signKey and verifyKey.
 
 * The message should be a string.
@@ -77,12 +85,14 @@ Example:
   var message = "Hello World!!";
  
   var signedMessage = sovrinDID.signMessage(message, signKey, verifyKey);
-
 ```
-### sovrinDID.verifySignedMessage(signedMessage, verifyKey)
+
+
+### verifySignedMessage(signedMessage, verifyKey)
+
 Verifies that the given message  has been signed by the possessor of the given verifyKey.
 
-* The signedMessage should be what is returned from the `signMessage(message, signKey, verifyKey)` method
+* The signedMessage should be what is returned from `signMessage(message, signKey, verifyKey)`
 * The verifyKey should be the verifyKey given from the `gen()` or `fromSeed(seed)` methods
 
 Returns the original message if the message was signed by the owner of the verifyKey `false` otherwise.
@@ -110,7 +120,9 @@ Output:
   false
 ```
 
+
 ### getKeyPairFromSignKey(signKey)
+
 Returns a key pair that is valid to use for encrypting. 
 * The signKey should be the signKey given from the object given from `gen()` or `fromSeed()`
 
@@ -131,14 +143,19 @@ Output:
 }
 ```
 
+
 ### getNonce()
+
 Returns a random nonce as a Uint8Array that can be used for encrypting.
 
 Example:
 ```js
 var nonce = sovrinDID.getNonce();
 ```
+
+
 ### getSharedSecret(theirVerifyKey, mySigningKey)
+
 Computes a sharedSecret to be used for encryption.
 
 * theirVerifyKey should be the publicKey given from the `getKeyPairFromSignKey(signKey)` method
@@ -159,7 +176,9 @@ var sharedSecret1To2 = sovrinDID.getSharedSecret(keyPair2.publicKey, keyPair1.se
 var sharedSecret2To1 = sovrinDID.getSharedSecret(keyPair1.publicKey, keyPair2.secretKey);
 ```
 
+
 ### encryptMessage(message, nonce, sharedSecret)
+
 Encrypts a the given message using a precomputed sharedSecret.
 * message should be given as a string
 * nonce should be a nonce from the `getNonce()` method 
@@ -183,7 +202,10 @@ var message = "Hello World!!";
 var nonce = sovrinDID.getNonce();
 var encryptedMessage = sovrinDID.encryptMessage(message, nonce, sharedSecret1To2);
 ```
+
+
 ### decryptMessage(encryptedMessage, nonce, sharedSecret)
+
 Verifies and decrypts a previously encrypted message.
 * encryptedMessage should be what is returned from the `encryptMessage(message, nonce, sharedSecret)` method
 * nonce should be a nonce given from the `getNonce()` method
@@ -220,5 +242,8 @@ Output:
 Hello World!!
 false
 ```
+
+
 ## License
+
 MIT
