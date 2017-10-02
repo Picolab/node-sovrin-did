@@ -1,6 +1,7 @@
 var nacl = require("tweetnacl");
 var bs58 = require("bs58");
 
+
 var fromSeed = function(seed){
 
     var x = nacl.sign.keyPair.fromSeed(seed);
@@ -20,15 +21,40 @@ var fromSeed = function(seed){
 var verifySignedMessage = function(signedMessage, verifyKey) {
     var decodedKey = bs58.decode(verifyKey);
     var signed = nacl.sign.open(signedMessage, decodedKey);
-    return signed !== null;
+    return signed !== null ? new Buffer(signed).toString("utf8") : false;
 };
 
 var signMessage = function(message, signKey, verifyKey) {
     verifyKey = bs58.decode(verifyKey);
     signKey = bs58.decode(signKey);
     var fullSignKey = Buffer.concat([signKey, verifyKey]);
-    var arrayMessage = Uint8Array.from(message);
+    var arrayMessage = Buffer.from(message, "utf8");
     return nacl.sign(arrayMessage, fullSignKey);
+};
+
+function getArrayFromKey(key) {
+    return Uint8Array.from(bs58.decode(key));
+}
+
+var getNonce = function () {
+    return nacl.randomBytes(nacl.box.nonceLength);
+};
+
+var getBoxKeyPairFromSignKey = function (signKey) {
+    return nacl.box.keyPair.fromSecretKey(getArrayFromKey(signKey));
+};
+
+var getSharedSecret = function (theirVerifyKey, mySigningKey) {
+    return nacl.box.before(theirVerifyKey, mySigningKey)
+};
+
+var decryptMessage = function (encryptedMessage, nonce, sharedSecret) {
+    var verifiedEncrypTion = nacl.box.open.after(encryptedMessage, nonce, sharedSecret);
+    return verifiedEncrypTion !== null ? new Buffer(verifiedEncrypTion).toString("utf8") : false;
+};
+
+var encryptMessage =  function (message, nonce, sharedSecret) {
+    return nacl.box.after(Buffer.from(message, "utf8"), nonce, sharedSecret);
 };
 
 module.exports = {
@@ -39,4 +65,9 @@ module.exports = {
     fromSeed: fromSeed,
     signMessage: signMessage,
     verifySignedMessage: verifySignedMessage,
+    getKeyPairFromSignKey: getBoxKeyPairFromSignKey,
+    getSharedSecret: getSharedSecret,
+    decryptMessage: decryptMessage,
+    encryptMessage: encryptMessage,
+    getNonce: getNonce,
 };
