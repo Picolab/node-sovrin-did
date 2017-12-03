@@ -5,8 +5,9 @@ var bs58 = require("bs58");
 var fromSeed = function(seed){
 
     var x = nacl.sign.keyPair.fromSeed(seed);
-    var signKey = bs58.encode(x.secretKey.subarray(0, 32));
-    var keyPair = getBoxKeyPairFromSignKey(signKey);
+    var secretKey = x.secretKey.subarray(0, 32);
+    var signKey = bs58.encode(secretKey);
+    var keyPair = nacl.box.keyPair.fromSecretKey(secretKey);
 
     return {
 
