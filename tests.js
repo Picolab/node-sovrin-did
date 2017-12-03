@@ -14,12 +14,12 @@ test("sovrinDID.fromSeed(seed)", function(t){
 
         did: "jbJWZXeXSsD5o1iWhYGFc",
         verifyKey: "QDQ7Y69yg6eeJNstq62rXw8mK8HmnnsocPwvo9DU2tS",
-        publicKey: "C2CLejK2c3SC9Rz4JLFuNtWJM8WDRq2CEMJuRqaJvr35",
+        encryptionPublicKey: "C2CLejK2c3SC9Rz4JLFuNtWJM8WDRq2CEMJuRqaJvr35",
 
         secret: {
             seed: "3b75434f4fb431bfcdd1d7f3e0544fde12e5bb7d19b36a7f6cffe1a0bf1fd8ff",
             signKey: "516mChDX1BRjwHJc2w838W8cXxy8a6Eb35HKXjPR2fD8",
-            privateKey: "516mChDX1BRjwHJc2w838W8cXxy8a6Eb35HKXjPR2fD8",
+            encryptionPrivateKey: "516mChDX1BRjwHJc2w838W8cXxy8a6Eb35HKXjPR2fD8",
         },
     });
 
@@ -27,12 +27,12 @@ test("sovrinDID.fromSeed(seed)", function(t){
 
         did: "E7cwAzuB9kSU3mj2n9p97P",
         verifyKey: "89ZgeKmTktxWg9UrGFzL2PbcHrToKNMPpLQtjbh17pfT",
-        publicKey: "5UAXeov4Gi7ioSTLDoMPtdvqX6RRmJcQAWagVgdaxUej",
+        encryptionPublicKey: "5UAXeov4Gi7ioSTLDoMPtdvqX6RRmJcQAWagVgdaxUej",
 
         secret: {
             seed: "5d40a10e4723a41216f98a3cc4c1082a4fa51a0ffa6196960ad931efe654dd2e",
             signKey: "7H25Jfb2ND51hhaomL5FPhhqQvBGujd1jJeSjZZ8HQzR",
-            privateKey: "7H25Jfb2ND51hhaomL5FPhhqQvBGujd1jJeSjZZ8HQzR",
+            encryptionPrivateKey: "7H25Jfb2ND51hhaomL5FPhhqQvBGujd1jJeSjZZ8HQzR",
         },
     });
 
@@ -40,12 +40,12 @@ test("sovrinDID.fromSeed(seed)", function(t){
 
         did: "TvqM6vQHEZb4EDYkfUVVUp",
         verifyKey: "FgFdznhQTymQEBKNoboDLKDGWB7eezrhvKKQK2uKUSU5",
-        publicKey: "3mosoLnk91yNrGga3vJtLaFNXf9yi85gSNisMT643HyH",
+        encryptionPublicKey: "3mosoLnk91yNrGga3vJtLaFNXf9yi85gSNisMT643HyH",
 
         secret: {
             seed: "7cb46171cd7a9bf9440e9c74c0752b37ae89b72184bb6693d8dc73752078ea0f",
             signKey: "9Po5sqUto67MYFyfXXgV3PwvXoRxCfEXpSoMKn1eFtcv",
-            privateKey: "9Po5sqUto67MYFyfXXgV3PwvXoRxCfEXpSoMKn1eFtcv",
+            encryptionPrivateKey: "9Po5sqUto67MYFyfXXgV3PwvXoRxCfEXpSoMKn1eFtcv",
         },
     });
 
@@ -53,12 +53,12 @@ test("sovrinDID.fromSeed(seed)", function(t){
 
         did: "MAF6ioWmybYvjYU2HD9oBE",
         verifyKey: "BzH5a2wLEyKxySUALpfBiBjHZtZudCG68J17QwWkRsdN",
-        publicKey: "7QhcMiFkfZLf6TScAucX2kw3A9561MHMukWUhnsSzba8",
+        encryptionPublicKey: "7QhcMiFkfZLf6TScAucX2kw3A9561MHMukWUhnsSzba8",
 
         secret: {
             seed: "35604fb84e67d18a76b956d1cbf9ba7384994c3fba1e140ba95928cc98823058",
             signKey: "4bMnc36WuLYJqsWTZtiazJJrtkvPwgyWnirn7gKk7ium",
-            privateKey: "4bMnc36WuLYJqsWTZtiazJJrtkvPwgyWnirn7gKk7ium",
+            encryptionPrivateKey: "4bMnc36WuLYJqsWTZtiazJJrtkvPwgyWnirn7gKk7ium",
         },
     });
 
