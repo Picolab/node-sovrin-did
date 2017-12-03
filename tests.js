@@ -134,8 +134,8 @@ test("sovrinDID.getSharedSecret(theirVerifyKey, mySigningKey)", function(t) {
     var sovrin2 = sovrinDID.gen();
 
     // Create shared secrets from the string version of the keys
-    var sharedSecret1 = sovrinDID.getSharedSecret(sovrin2.publicKey, sovrin1.secret.privateKey);
-    var sharedSecret2 = sovrinDID.getSharedSecret(sovrin1.publicKey, sovrin2.secret.privateKey);
+    var sharedSecret1 = sovrinDID.getSharedSecret(sovrin2.encryptionPublicKey, sovrin1.secret.encryptionPrivateKey);
+    var sharedSecret2 = sovrinDID.getSharedSecret(sovrin1.encryptionPublicKey, sovrin2.secret.encryptionPrivateKey);
     t.equal(nacl.verify(sharedSecret1, sharedSecret2), true);
 
 

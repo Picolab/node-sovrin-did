@@ -13,12 +13,12 @@ var fromSeed = function(seed){
 
         did: bs58.encode(x.publicKey.subarray(0, 16)),
         verifyKey: bs58.encode(x.publicKey),
-        publicKey: bs58.encode(keyPair.publicKey),
+        encryptionPublicKey: bs58.encode(keyPair.publicKey),
 
         secret: {
             seed: Buffer.from(seed).toString("hex"),
             signKey: signKey,
-            privateKey: bs58.encode(keyPair.secretKey),
+            encryptionPrivateKey: bs58.encode(keyPair.secretKey),
         },
     };
 };
