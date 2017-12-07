@@ -5,15 +5,20 @@ var bs58 = require("bs58");
 var fromSeed = function(seed){
 
     var x = nacl.sign.keyPair.fromSeed(seed);
+    var secretKey = x.secretKey.subarray(0, 32);
+    var signKey = bs58.encode(secretKey);
+    var keyPair = nacl.box.keyPair.fromSecretKey(secretKey);
 
     return {
 
         did: bs58.encode(x.publicKey.subarray(0, 16)),
         verifyKey: bs58.encode(x.publicKey),
+        encryptionPublicKey: bs58.encode(keyPair.publicKey),
 
         secret: {
             seed: Buffer.from(seed).toString("hex"),
-            signKey: bs58.encode(x.secretKey.subarray(0, 32)),
+            signKey: signKey,
+            encryptionPrivateKey: bs58.encode(keyPair.secretKey),
         },
     };
 };
@@ -40,11 +45,13 @@ var getNonce = function () {
     return nacl.randomBytes(nacl.box.nonceLength);
 };
 
-var getBoxKeyPairFromSignKey = function (signKey) {
+var getKeyPairFromSignKey = function (signKey) {
     return nacl.box.keyPair.fromSecretKey(getArrayFromKey(signKey));
 };
 
 var getSharedSecret = function (theirVerifyKey, mySigningKey) {
+    theirVerifyKey = typeof theirVerifyKey === "string" ? bs58.decode(theirVerifyKey) : theirVerifyKey;
+    mySigningKey = typeof mySigningKey === "string" ? bs58.decode(mySigningKey) : mySigningKey;
     return nacl.box.before(theirVerifyKey, mySigningKey)
 };
 
@@ -65,7 +72,7 @@ module.exports = {
     fromSeed: fromSeed,
     signMessage: signMessage,
     verifySignedMessage: verifySignedMessage,
-    getKeyPairFromSignKey: getBoxKeyPairFromSignKey,
+    getKeyPairFromSignKey: getKeyPairFromSignKey,
     getSharedSecret: getSharedSecret,
     decryptMessage: decryptMessage,
     encryptMessage: encryptMessage,

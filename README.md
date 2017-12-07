@@ -25,9 +25,11 @@ output:
 ```js
 { did: 'S7evWWTSbaXELyE9w53sFr',
   verifyKey: 'EgvhZsLKSsqsbNBfJ2wfR9FFWo9YqkpxpfXeT4ifR1Cq',
+  encryptionPublicKey: '5UAXeov4Gi7ioSTLDoMPtdvqX6RRmJcQAWagVgdaxUej',
   secret:
    { seed: '36a572a7e43956784b517c57b26720a8ef838d114c0619f1d8c7801c37fa4f6a',
-     signKey: '4gKLe7Qq2WX249NBfymQySZbAzXboq2emMig6wBR82Bj' } }
+     signKey: '4gKLe7Qq2WX249NBfymQySZbAzXboq2emMig6wBR82Bj',
+     encryptionPrivateKey: '7H25Jfb2ND51hhaomL5FPhhqQvBGujd1jJeSjZZ8HQzR'} }
 ```
 
 
@@ -36,16 +38,18 @@ output:
 
 ### gen()
 
-Generates a new did, verification key, signing key, and also gives you the seed used to generate them.
+Generates a new did, verification key, signing key, and also gives you the seed used to generate them. It also includes the public and private key used for encryption.
 
 ```js
 {
     did: "<base58 did>",
     verifyKey: "<base58 publicKey>",
+    publicKey: "<base58 publicKey>",
 
     secret: {
         seed: "<hex encoded 32-byte seed>",
-        signKey: "<base58 secretKey>"
+        signKey: "<base58 secretKey>",
+        privateKey: "<base58 privateKey>"
     }
 }
 ```
@@ -158,22 +162,29 @@ var nonce = sovrinDID.getNonce();
 
 Computes a sharedSecret to be used for encryption.
 
-* theirVerifyKey should be the publicKey given from the `getKeyPairFromSignKey(signKey)` method
-* mySigningKey should be the secretKey given from the `getKeyPairFromSignKey(signKey)` method
+* theirVerifyKey should be the publicKey given from the `getKeyPairFromSignKey(signKey)` method or the publicKey string given from the `gen()` method.
+* mySigningKey should be the secretKey given from the `getKeyPairFromSignKey(signKey)` method or the privateKey given from the `gen()` method.
 
 Example:
 ```js
 var sovrin1 = sovrinDID.gen();
 var sovrin2 = sovrinDID.gen();
+
+// Using the strings given via the gen() method
+var sharedSecret1 = sovrinDID.getSharedSecret(sovrin2.encryptionPublicKey, sovrin1.secret.encryptionPrivateKey);
+var sharedSecret2 = sovrinDID.getSharedSecret(sovrin1.encryptionPublicKey, sovrin2.secret.encryptionPrivateKey);
+
 var signKey1 = sovrin1.secret.signKey;
 var signKey2 = sovrin2.secret.signKey;
 
 var keyPair1 = sovrinDID.getKeyPairFromSignKey(signKey1);
 var keyPair2 = sovrinDID.getKeyPairFromSignKey(signKey2);
 
-// These two secrets are the same
-var sharedSecret1To2 = sovrinDID.getSharedSecret(keyPair2.publicKey, keyPair1.secretKey);
-var sharedSecret2To1 = sovrinDID.getSharedSecret(keyPair1.publicKey, keyPair2.secretKey);
+// Using the buffer given from the getKeyPairFromSignKey(signKey2) method
+var sharedSecret3 = sovrinDID.getSharedSecret(keyPair2.publicKey, keyPair1.secretKey);
+var sharedSecret4 = sovrinDID.getSharedSecret(keyPair1.publicKey, keyPair2.secretKey);
+
+// All the secrets generated are equivalent
 ```
 
 
