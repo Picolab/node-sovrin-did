@@ -1,6 +1,6 @@
 {
   "name": "sovrin-did",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "node.js module to generate DID and Ed25519 keys to use with Sovrin",
   "main": "index.js",
   "scripts": {
