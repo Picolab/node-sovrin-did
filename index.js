@@ -45,7 +45,7 @@ var getNonce = function () {
     return nacl.randomBytes(nacl.box.nonceLength);
 };
 
-var getBoxKeyPairFromSignKey = function (signKey) {
+var getKeyPairFromSignKey = function (signKey) {
     return nacl.box.keyPair.fromSecretKey(getArrayFromKey(signKey));
 };
 
@@ -72,7 +72,7 @@ module.exports = {
     fromSeed: fromSeed,
     signMessage: signMessage,
     verifySignedMessage: verifySignedMessage,
-    getKeyPairFromSignKey: getBoxKeyPairFromSignKey,
+    getKeyPairFromSignKey: getKeyPairFromSignKey,
     getSharedSecret: getSharedSecret,
     decryptMessage: decryptMessage,
     encryptMessage: encryptMessage,

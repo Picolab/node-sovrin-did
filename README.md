@@ -25,11 +25,11 @@ output:
 ```js
 { did: 'S7evWWTSbaXELyE9w53sFr',
   verifyKey: 'EgvhZsLKSsqsbNBfJ2wfR9FFWo9YqkpxpfXeT4ifR1Cq',
-  encryptionPublicKey: "5UAXeov4Gi7ioSTLDoMPtdvqX6RRmJcQAWagVgdaxUej",
+  encryptionPublicKey: '5UAXeov4Gi7ioSTLDoMPtdvqX6RRmJcQAWagVgdaxUej',
   secret:
    { seed: '36a572a7e43956784b517c57b26720a8ef838d114c0619f1d8c7801c37fa4f6a',
      signKey: '4gKLe7Qq2WX249NBfymQySZbAzXboq2emMig6wBR82Bj',
-     encryptionPrivateKey: "7H25Jfb2ND51hhaomL5FPhhqQvBGujd1jJeSjZZ8HQzR"} }
+     encryptionPrivateKey: '7H25Jfb2ND51hhaomL5FPhhqQvBGujd1jJeSjZZ8HQzR'} }
 ```
 
 
@@ -38,7 +38,7 @@ output:
 
 ### gen()
 
-Generates a new did, verification key, signing key, and also gives you the seed used to generate them. It also includes the public and private key used for encryption. 
+Generates a new did, verification key, signing key, and also gives you the seed used to generate them. It also includes the public and private key used for encryption.
 
 ```js
 {
@@ -173,7 +173,7 @@ var sovrin2 = sovrinDID.gen();
 // Using the strings given via the gen() method
 var sharedSecret1 = sovrinDID.getSharedSecret(sovrin2.encryptionPublicKey, sovrin1.secret.encryptionPrivateKey);
 var sharedSecret2 = sovrinDID.getSharedSecret(sovrin1.encryptionPublicKey, sovrin2.secret.encryptionPrivateKey);
-  
+
 var signKey1 = sovrin1.secret.signKey;
 var signKey2 = sovrin2.secret.signKey;
 
